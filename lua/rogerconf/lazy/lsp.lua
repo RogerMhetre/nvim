@@ -42,7 +42,6 @@ return {
                 "ts_ls", --Typescript
                 "bashls", --Bash
                 "zls", --Zig
-                "pyre", --Python
                 "solidity_ls", --Solidity
                 "svelte", --Svelte
                 "html", --HTML

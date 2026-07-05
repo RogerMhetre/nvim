@@ -81,3 +81,33 @@ vim.keymap.set("n", "<leader><leader>", function()
     vim.cmd("so")
 end)
 
+vim.keymap.set("n", "<leader>r", function()
+    vim.cmd("write")
+
+    local file = vim.fn.expand("%:p")
+    local filename = vim.fn.expand("%:t")
+    local basename = vim.fn.expand("%:t:r")
+    local ft = vim.bo.filetype
+
+    local runners = {
+        python = "python3 " .. vim.fn.shellescape(file),
+        javascript = "node " .. vim.fn.shellescape(file),
+        lua = "lua " .. vim.fn.shellescape(file),
+        java = "cd "
+            .. vim.fn.shellescape(vim.fn.expand("%:p:h"))
+            .. " && javac "
+            .. vim.fn.shellescape(filename)
+            .. " && java "
+            .. basename,
+    }
+
+    local cmd = runners[ft]
+
+    if not cmd then
+        vim.notify("No runner configured for " .. ft, vim.log.levels.ERROR)
+        return
+    end
+
+    vim.cmd("split")
+    vim.cmd("terminal bash -c " .. vim.fn.shellescape(cmd .. "; echo; read -p 'Press enter to close'"))
+end, { desc = "Run current file" })
